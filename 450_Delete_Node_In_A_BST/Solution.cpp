@@ -11,10 +11,11 @@
  */
 class Solution {
 public:
+
     TreeNode* findMinNode(TreeNode* root)
     {
         TreeNode* curr = root;
-        // Traverse the BST to find the bottom (smallest) node
+        // Traverse tree to find the minimum left-most node
         while(curr && curr->left)
         {
             curr = curr->left;
@@ -23,39 +24,39 @@ public:
     }
 
     TreeNode* deleteNode(TreeNode* root, int key) {
-        if(nullptr == root)
+        // Recursion base case
+        if(root == nullptr)
         {
             return nullptr;
         }
 
-        // Traverse until we find the node
-        if(key > root->val)
+        // Traverse to find the node with the value of key
+        if(key > root->val) // If key is greater than value, traverse to the right
         {
             root->right = deleteNode(root->right, key);
         }
-        else if(key < root->val)
+        else if(key < root->val) // If key is less than value, traverse to the left
         {
             root->left = deleteNode(root->left, key);
         }
-        // If we find it, deletion procedure depends on how many (if any) child nodes node has
-        else
+        else // If we've found the node we want to delete
         {
-            // Only one child we just shift the remaining node upwards
-            // If there is no left node
-            if(nullptr == root->left)
+            // 2 possible cases
+            // 1. Node has 0 or 1 child
+            // 0 children is covered in the recursion base case
+            if(root->left == nullptr) // 1 child on the right
             {
                 return root->right;
             }
-            else if(nullptr == root->right) // If no right node
+            else if(root->right == nullptr) // 1 child on the left
             {
                 return root->left;
             }
-            // If there are two children, we need to pick left mode node in right subtree
-            else
+            else // Node has 2 children, we need to find the min node in the right sub-tree
             {
-                TreeNode* minNode = findMinNode(root->right);
-                root->val = minNode->val;   // Replace deleted node with min node in right subtree
-                root->right = deleteNode(root->right, root->val);   // Delete the min node now that we've shifted it to this root node
+                TreeNode* minNode = findMinNode(root->right);  // Find the in-order successor(min node in right subtree)
+                root->val = minNode->val;   //'Delete' the desired node and replace
+                root->right = deleteNode(root->right, root->val); // Delete the old node that has been shifted up.
             }
         }
         return root;
