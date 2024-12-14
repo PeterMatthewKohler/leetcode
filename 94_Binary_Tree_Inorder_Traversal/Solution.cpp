@@ -11,22 +11,13 @@
  */
 class Solution {
 public:
-    void traverseFunc(TreeNode* root, std::vector<int>& inputVect)
-    {
-        // Recursion base case
-        if(!root)
-        {
-            return;
-        }
+    vector<int> array;  // Storage for return array
 
-        // Recursion case, we traverse left sub-tree first
-        traverseFunc(root->left, inputVect);
-        inputVect.push_back(root->val);
-        traverseFunc(root->right, inputVect);
-    }
     vector<int> inorderTraversal(TreeNode* root) {
-        std::vector<int> traverseVect;
-        traverseFunc(root, traverseVect);
-        return traverseVect;
+        if(!root) {return {};} // Recursion base case, return an empty vector
+        inorderTraversal(root->left);
+        array.push_back(root->val);
+        inorderTraversal(root->right);
+        return array;
     }
 };
