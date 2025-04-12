@@ -1,27 +1,28 @@
 class Solution {
 public:
-    vector<vector<int>> retArr;
-    vector<vector<int>> combinationSum(vector<int>& nums, int target) {
-        vector<int> curArr;
-        backtrack(nums, target, curArr, 0);
-        return retArr;
+    // At each point in the recursion we have two paths, we can add the current number
+    // to the sum, or skip that number and move on to the next. Need to explore both options
+    // in each recursive call.
+    vector<vector<int>> retVect; // Return object
+    void backtrack(vector<int>& nums, vector<int> curr, int index, int target)
+    {
+        if(target == 0)
+        {
+            retVect.push_back(curr);
+            return;
+        }
+        if(target < 0 || index >= nums.size()){return;}
+        // Stay at current index
+        curr.push_back(nums[index]);
+        backtrack(nums, curr, index, target - nums[index]);
+        curr.pop_back();
+        // Explore the next index value
+        backtrack(nums, curr, (index+1), target);
     }
 
-    void backtrack(vector<int>& nums, int target, vector<int>&cur, int i)
-    {
-        if(target == 0) // Valid combination recursion base case
-        {
-            retArr.push_back(cur);
-            return;
-        }
-        if(target < 0 || i >= nums.size()) // Invalid combination recursion base case
-        {
-            return;
-        }
-
-        cur.push_back(nums[i]);
-        backtrack(nums, target - nums[i], cur, i);
-        cur.pop_back();
-        backtrack(nums, target, cur, i + 1);
+    vector<vector<int>> combinationSum(vector<int>& nums, int target) {
+        std::vector<int> curr;
+        backtrack(nums, curr, 0, target);
+        return retVect;
     }
 };
