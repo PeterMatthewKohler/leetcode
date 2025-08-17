@@ -1,19 +1,20 @@
 class Solution {
 public:
-    int numDistinct = 0;
+    // Number of unique paths
+    int dp(int curr, int total, std::vector<int>& cache)
+    {
+        // Recursion base case: overshoot
+        if(curr > total){return 0;}
+        // Recursion base case: match
+        if(curr == total){return 1;}
+        // Dynamic programming
+        if(cache[curr] != -1){return cache[curr];}
+        // Update our cache
+        return cache[curr] = dp(curr+1, total, cache) + dp(curr+2, total, cache);
+    }
+
     int climbStairs(int n) {
-        // Root case
-        if(n == 0)
-        {
-            return 1;
-        }
-        else if(n >= 2)
-        {
-            return climbStairs(n - 1) + climbStairs(n - 2);
-        }
-        else
-        {
-            return climbStairs(n - 1);
-        }
+        std::vector<int> cache(n, -1);
+        return dp(0, n, cache);
     }
 };
