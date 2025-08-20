@@ -1,19 +1,18 @@
 class Solution {
 public:
     int findMin(vector<int>& nums) {
-        // Use binary search
+        // Find the pivot (min value in the rotated array)
         int l = 0, r = nums.size() - 1;
-        while(l < r) // Keep going until l == r
+        while(l < r)
         {
             int mid = (l + r) / 2;
-            // Which sorted array are we in? Left or right?
-            if(nums[mid] < nums[r]) // In right sorted array
+            if(nums[mid] < nums[r]) // In right rotated array, pivot could be mid or to left of mid
             {
-                r = mid; // min could be mid, so don't go past it
+                r = mid;
             }
-            else // Left sorted array
+            else // nums[mid] >= nums[r] In left rotated array, pivot has to be past mid to the right
             {
-                l = mid + 1; // We can go one past mid since mid is not less than r
+                l = mid + 1;
             }
         }
         return nums[l];

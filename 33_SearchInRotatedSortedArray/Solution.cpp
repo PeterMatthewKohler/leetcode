@@ -1,39 +1,42 @@
 class Solution {
 public:
-
-    // Binary search impl.
-    int binarySearch(vector<int> nums, int target, int left, int right)
+    int binarySearch(std::vector<int>& nums, int l, int r, int target)
     {
-        while(left <= right)
+        int res = -1; // Default choice
+        while(l <= r) // Looking for an exact match
         {
-            int mid = (left + right) / 2;
+            int mid = (l + r) / 2;
             if(nums[mid] == target){return mid;}
-            else if(nums[mid] >= target){right = mid - 1;} // Pull right down
-            else{left = mid + 1;} // Push left up
+            else if(nums[mid] > target){r = mid-1;} // Search left
+            else{l = mid + 1;} // Search right
         }
-        return -1;
+        return res;
     }
 
-    // Use binary search to find the pivot, then use binary search to find the value
     int search(vector<int>& nums, int target) {
-        // Find the pivot that separates the non-rotated from the rotated portion
+        // Binary search to find the pivot(minimum element)
         int l = 0, r = nums.size() - 1;
         while(l < r)
         {
-            int mid = (l + r)/2;
-            if(nums[mid] > nums[r]){l = mid + 1;} //
-            else{r = mid;} // In the rotated portion
+            int mid = (l + r) / 2;
+            if(nums[mid] < nums[r]) // Mid is in the right rotated array, pivot can be at or to the left of mid
+            {
+                r = mid;
+            }
+            else // nums[mid] >= nums[r] Mid is in the left rotated array, pivot has to be past mid
+            {
+                l = mid + 1;
+            }
         }
-        // Pivot is l(?)
         int pivot = l;
-        // Now do binary search based on which section of the sorted array our target SHOULD be if it exists
-        if(target > nums[nums.size()-1]) // Search from left to pivot-1
+        // Search array based on which value of target
+        if(target > nums[nums.size() - 1]) // Search left rotated array
         {
-            return binarySearch(nums, target, 0, pivot-1);
+            return binarySearch(nums, 0, pivot-1, target);
         }
-        else
+        else // Search right rotated array
         {
-            return binarySearch(nums, target, pivot, nums.size()-1); // Search from pivot to right
+            return binarySearch(nums, pivot, nums.size()-1, target);
         }
     }
 };
