@@ -1,31 +1,28 @@
 class Solution {
 public:
-    // Sliding window
     int lengthOfLongestSubstring(string s) {
-        // Edge case: 1 or less chars
-        if(s.size() == 0){return 0;}
+        // Use a set to check if we have duplicates
+        // Run two pointers to keep track of our current substring
         int l = 0;
-        int r = 0;
         std::unordered_set<char> set;
-        int res = 0;
+        int res = 0; // Final result
         for(int r = 0; r < s.size(); r++)
         {
-            // If it's a new char, we increment the window and add our char to the set
-            if(set.count(s[r]) == 0)
+            // Two cases: char isn't a duplicate or it is
+            if(set.count(s[r]) == 0) // Not a duplicate
             {
                 set.insert(s[r]);
             }
-            else // It's a repeat, don't add and instead start a new window
+            else // Duplicate
             {
-                // Increment l to one past the duplicate
-                while(s[l] != s[r])
+                while(set.count(s[r]) != 0) // Remove old substring
                 {
                     set.erase(s[l]);
                     l++;
                 }
-                l++;
+                set.insert(s[r]); // Start new one
             }
-            res = max(res, static_cast<int>(set.size()));
+            res = std::max(res, static_cast<int>(set.size())); // Update our result
         }
         return res;
     }
