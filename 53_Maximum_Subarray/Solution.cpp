@@ -1,15 +1,14 @@
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        // Solve with Kadane's algorithm
-        int maxSum = 0;
-        int curSum = 0;
-
-        for(auto n : nums)
+        // Kadane's algo
+        int currSum = 0;
+        int maxSum = nums[0];
+        for(auto num : nums)
         {
-            curSum = max(curSum, 0);
-            curSum += n;
-            maxSum = max(curSum, maxSum);
+            if(currSum < 0){currSum = 0;} // Reset
+            currSum += num;
+            maxSum = std::max(maxSum, currSum);
         }
         return maxSum;
     }
