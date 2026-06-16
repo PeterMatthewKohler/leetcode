@@ -1,55 +1,34 @@
 class Solution {
 public:
     bool isValid(string s) {
-        bool res;
-        for(int i = 0; i < s.size(); i++)
-        {
-            char c = s.back();
-            s.pop_back();
-            res = false;
-            switch(c)
-            {
-                case(')'):
-                {
-                    while((c != '(') && s.size() > 0)
-                    {
-                        c = s.back();
-                        s.pop_back();
-                        if(c == '(')
-                        {
-                            res = true;
-                        }
+        // Use a stack
+        std::stack<char> st;
+        for(const auto& c : s) {
+            // Open brackets go into stack
+            if(c == '(' || c == '{' || c == '[') {
+                st.push(c);
+            }
+            // Closing brackets need to have their opening partner be
+            // on top of stack, if not it is invalid
+            else {
+                if(st.empty()){return false;}
+                switch(c) {
+                    case ')' : {
+                        if(st.top() != '('){return false;}
+                        else{st.pop(); break;}
                     }
-                }
-                break;
-                case('}'):
-                {
-                    while((c != '{') && s.size() > 0)
-                    {
-                        c = s.back();
-                        s.pop_back();
-                        if(c == '{')
-                        {
-                            res = true;
-                        }
+                    case '}' : {
+                        if(st.top() != '{'){return false;}
+                        else{st.pop(); break;}
                     }
-                }
-                break;
-                case(']'):
-                {
-                    while((c != '[') && s.size() > 0)
-                    {
-                        c = s.back();
-                        s.pop_back();
-                        if(c == '[')
-                        {
-                            res = true;
-                        }
+                    case ']' : {
+                        if(st.top() != '['){return false;}
+                        else{st.pop(); break;}
                     }
+                    default : {return false;} // wrong character somehow should never hit this
                 }
-                break;
             }
         }
-        return res;
+        return st.empty();  // Should be no unprocessed brackets
     }
 };

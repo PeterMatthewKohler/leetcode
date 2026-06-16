@@ -11,24 +11,27 @@
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        auto cmpLambda = [](ListNode* a, ListNode* b){return a->val > b->val;};
-        std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(cmpLambda)> minHeap(cmpLambda);
-        // Seed our min heap
-        for(auto list : lists)
-        {
-            if(list){minHeap.push(list);}
+        // Custom comparator to compare node values
+        auto cmp = [](ListNode* a, ListNode* b) {return a->val > b->val;};
+        // Min-heap
+        std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(cmp)> minHeap;
+        // Seed the min-heap
+        for(const auto& list : lists) {
+            if(list != nullptr){minHeap.push(list);}
         }
-        // Pointer to track the head
+        // Convenience ptrs
         ListNode* dummy = new ListNode();
         ListNode* curr = dummy;
-        // Do the sorting
-        while(!minHeap.empty())
-        {
-            ListNode* node = minHeap.top();
+        // Go until entire set of lists is sorted
+        while(!minHeap.empty()) {
+            // Grab sorted value
+            ListNode* tmp = minHeap.top();
             minHeap.pop();
-            curr->next = node; // Push sorted node
-            curr = curr->next;
-            if(node->next){minHeap.push(node->next);}
+            // Insert next value in list into heap
+            if(tmp->next != nullptr){minHeap.push(tmp->next);}
+            // Append sorted value into our final LL
+            curr->next = tmp;
+            curr = curr->next;  // Progress LL
         }
         return dummy->next;
     }
